@@ -1,0 +1,3 @@
+var config = {
+  "imp_key" : "[unique string in your Electric Imp control URL]"
+};

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=320, user-scalable=no">
+<style>
+html, body, table, tr, td, input {margin: 0; padding: 0;}
+body {background-color: #333;}
+table {border-collapse: collapse;}
+.slider input {display: block; width: 256px; height: 32px;}
+#slider1 {-webkit-transform: rotate(-90deg) translatex(-112px) translatey(112px); width: 32px; height: 256px;}
+#chart {width: 256px; height: 256px; background-color: #ccc}
+button {width: 32px; height: 32px; border: 0; display: block;}
+</style>
+<script src="config.js"></script>
+<script>
+var loader = new Image();
+
+function clamp(num) {
+  var x = (num > 255 ? 255 : num)
+  return (x < 0 ? 0 : x)
+}
+
+function updateUrl() {
+  loader.src = "https://agent.electricimp.com/" + config.imp_key + "?command=setColor&args=" + document.getElementById("yrange").value + "," + document.getElementById("xrange").value + ",0";
+}
+
+function setXY(x, y) {
+  document.getElementById("xrange").value = x;
+  document.getElementById("yrange").value = y;
+  updateUrl();
+}
+
+function handleTouch(e) {
+  var t = e.touches[0];
+  var x = clamp(t.clientX - this.offsetLeft);
+  var y = clamp(255 - (t.clientY - this.offsetTop));
+  document.getElementById("xrange").value = x;
+  document.getElementById("yrange").value = y;
+  updateUrl();
+}
+window.onload = function() {
+  document.ontouchmove = function(event){
+    event.preventDefault();
+  }
+  document.getElementById("chart").addEventListener("touchstart", handleTouch);
+  document.getElementById("chart").addEventListener("touchmove", handleTouch);
+}
+</script>
+</head>
+<body>
+<table>
+<tr>
+<td><button style="background-color: #fec" ontouchstart="setXY(0,255)"></button></td>
+<td></td>
+<td><button style="background-color: #fff" ontouchstart="setXY(255,255)"></button></td>
+</tr>
+<tr>
+<td>
+<div class="slider" id="slider1">
+<div class="inner">
+<input type="range" value="0" min="0" max="255" step="1" id="yrange">
+</div>
+</div>
+</td>
+<td id="chart"></td>
+<td></td>
+</tr>
+<tr>
+<td><button style="background-color: #000" ontouchstart="setXY(0,0)"></button></td>
+<td>
+<div class="slider">
+<div class="inner">
+<input type="range" value="0" min="0" max="255" step="1" id="xrange">
+</div>
+</div>
+</td>
+<td><button style="background-color: #cef" ontouchstart="setXY(255,0)"></button></td>
+</tr>
+</table>
+</body>
+</html>
